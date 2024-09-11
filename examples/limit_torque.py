@@ -25,11 +25,17 @@ qcs = [constraints.ConvexQuadraticConstraint(P, q, r)]
 cs = constraints.ConvexConstraints(lc=lc, qcs=qcs, socs=[], lmic=None)
 
 model = torch.nn.Sequential(torch.nn.Flatten(), torch.nn.Linear(3, 64),
-                            torch.nn.ReLU(),    torch.nn.Linear(64, 64),
-                            constraint_module.ConstraintModule(cs, input_dim=64, create_map=True)) 
+                            torch.nn.ReLU(),    torch.nn.Linear(64, 7),
+                            constraint_module.ConstraintModule(cs, input_dim=7, create_map=True)) 
 
-x_batched = torch.Tensor(500, 3, 1).uniform_(-1.0, 1.0)
+x_batched = torch.Tensor(500, 3).uniform_(-1.0, 1.0)
+print(x_batched)
+print(x_batched.size())
 y_batched = model(x_batched)
+y_batched = y_batched.squeeze()
+print(y_batched)
+print(y_batched.size())
+print(model)
 
 #Each element of y_batched is guaranteed to satisfy the torque constraints
 

@@ -230,31 +230,30 @@ class ConstraintModule(torch.nn.Module):
 			####################################################
 			####################################################
 
-
-		if(self.method=='RAYEN_old'):
-			self.forwardForMethod=self.forwardForRAYENOld
-			self.dim_after_map=(self.n+1)
-		elif(self.method=='RAYEN'):
-			self.forwardForMethod=self.forwardForRAYEN
-			self.dim_after_map=self.n
-		elif(self.method=='UU'):
-			self.forwardForMethod=self.forwardForUU
-			self.dim_after_map=self.k
-		elif(self.method=='Bar'):
-			self.forwardForMethod=self.forwardForBar
-			self.dim_after_map=(self.num_vertices + self.num_rays)
-		elif(self.method=='PP'):
-			self.forwardForMethod=self.forwardForPP
-			self.dim_after_map=(self.n)
-		elif(self.method=='UP'):
-			self.forwardForMethod=self.forwardForUP
-			self.dim_after_map=(self.n)
-		elif(self.method=='DC3'):
-			self.forwardForMethod=self.forwardForDC3
-			self.dim_after_map=(self.k - self.neq_DC3)
-			assert (self.dim_after_map==self.n)
-		else:
-			raise NotImplementedError
+		# if(self.method=='RAYEN_old'):
+		# 	self.forwardForMethod=self.forwardForRAYENOld
+		# 	self.dim_after_map=(self.n+1)
+		# elif(self.method=='RAYEN'):
+		# 	self.forwardForMethod=self.forwardForRAYEN
+		# 	self.dim_after_map=self.n
+		# elif(self.method=='UU'):
+		# 	self.forwardForMethod=self.forwardForUU
+		# 	self.dim_after_map=self.k
+		# elif(self.method=='Bar'):
+		# 	self.forwardForMethod=self.forwardForBar
+		# 	self.dim_after_map=(self.num_vertices + self.num_rays)
+		# elif(self.method=='PP'):
+		# 	self.forwardForMethod=self.forwardForPP
+		# 	self.dim_after_map=(self.n)
+		# elif(self.method=='UP'):
+		# 	self.forwardForMethod=self.forwardForUP
+		# 	self.dim_after_map=(self.n)
+		# elif(self.method=='DC3'):
+		# 	self.forwardForMethod=self.forwardForDC3
+		# 	self.dim_after_map=(self.k - self.neq_DC3)
+		# 	assert (self.dim_after_map==self.n)
+		# else:
+		# 	raise NotImplementedError
 
 		if(create_map):
 			utils.verify(input_dim is not None, "input_dim needs to be provided")
@@ -457,7 +456,7 @@ class ConstraintModule(torch.nn.Module):
 
 		return kappa
 
-	def forwardForRAYENOld(self, q):
+	def forwardForRAYENOld(self, q: torch.Tensor) -> torch.Tensor:
 		v = q[:,  0:self.n,0:1]
 		v_bar=torch.nn.functional.normalize(v, dim=1)
 		kappa=self.computeKappa(v_bar)
@@ -465,7 +464,7 @@ class ConstraintModule(torch.nn.Module):
 		alpha=1/(torch.exp(beta) + kappa) 
 		return self.getyFromz(self.z0 + alpha*v_bar)
 
-	def forwardForRAYEN(self, q):
+	def forwardForMethod(self, q):
 		v = q[:,  0:self.n,0:1]
 		v_bar=torch.nn.functional.normalize(v, dim=1)
 		kappa=self.computeKappa(v_bar)
